@@ -4,7 +4,7 @@
   "description": "A simple fitness Tracker",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon __PORT__=3000 index.js"
+    "dev-start": "npx nodemon __PORT__=3000 ./server/index.js"
   },
   "author": "Amin Foroutan",
   "license": "ISC",
