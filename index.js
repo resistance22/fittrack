@@ -5,12 +5,14 @@ const app = express();
 const port = 3000;
 
 app.set('view engine', 'ejs');
-app.set('views', paht.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.static(path.join(__dirname, 'static')));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.render('home', {
+    title: 'Fittrack',
+  });
 });
 
 app.listen(port, () => console.log(`Fittrack app listening at http://localhost:${port}`));
