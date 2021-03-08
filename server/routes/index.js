@@ -9,5 +9,11 @@ module.exports = () => {
       title: 'Fittrack',
     });
   });
+
+  router.get('/test', (req, res) => {
+    res.json({
+      hello: 'world',
+    });
+  });
   return router;
 };
