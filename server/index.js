@@ -9,6 +9,10 @@ const port = process.env.PORT || 2000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// set up json parsing for req.body
+app.use(express.json());
+
+// set up static directory
 app.use(express.static(path.join(__dirname, 'static')));
 
 // setting up the routes
