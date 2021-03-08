@@ -1,19 +1,9 @@
 const express = require('express');
+const controllers = require('../controllers');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
-
 module.exports = () => {
-  router.get('/', (req, res) => {
-    res.render('home', {
-      title: 'Fittrack',
-    });
-  });
-
-  router.get('/test', (req, res) => {
-    res.json({
-      hello: 'world',
-    });
-  });
+  router.get('/', controllers.home.get);
   return router;
 };
