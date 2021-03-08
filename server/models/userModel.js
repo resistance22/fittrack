@@ -66,7 +66,10 @@ class User {
   static async findbyID(id) {
     try {
       const user = DB.query('SELECT * FROM users WHERE ID=$1', [id]);
-      return user;
+      return {
+        count: user.rowCount,
+        rows: user.rows,
+      };
     } catch (e) {
       console.log(e);
     }
@@ -78,8 +81,13 @@ class User {
    */
   static async findbyEmail(email) {
     try {
-      const user = DB.query('SELECT * FROM users WHERE email=$1', [email]);
-      return user;
+      const user = await DB.query(
+          'SELECT * FROM users WHERE email=$1', [email],
+      );
+      return {
+        count: user.rowCount,
+        rows: user.rows,
+      };
     } catch (e) {
       console.log(e);
     }
