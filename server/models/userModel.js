@@ -1,4 +1,3 @@
-
 /**
  * User Model
  */
@@ -14,7 +13,15 @@ class User {
    * @param  {String} gender user gender
    * @param  {String} bio user bio
    */
-  constructor(password, email, firstName, lastName, height, gender, bio) {
+  constructor(
+      password,
+      email,
+      firstName=null,
+      lastName=null,
+      height,
+      gender,
+      bio=null,
+  ) {
     this.password = password;
     this.email = email;
     this.first_name = firstName;
