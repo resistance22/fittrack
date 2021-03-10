@@ -47,13 +47,15 @@ class User {
         first_name,
         last_name,
         gender,
-        bio) VALUES ($1,$2,$3,$4,$5,$6,$7)`, [
-        this.password,
-        this.email,
-        this.phonenumber,
-        this.first_name,
-        this.last_name,
-        this.gender,
+        height
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7)`, [
+        this.password, // $1
+        this.email, // $2
+        this.phonenumber, // $3
+        this.first_name, // $4
+        this.last_name, // $5
+        this.gender, // $6
+        this.height, // $7
       ]);
       return newUser;
     } catch (e) {
@@ -89,6 +91,7 @@ class User {
         rows: user.rows,
       };
     } catch (e) {
+      // TODO: log the error
       console.log(e);
     }
   }
