@@ -1,4 +1,5 @@
 const DB = require('../db');
+const bcrypt = require('bcrypt');
 /**
  * User Model
  */
@@ -25,7 +26,6 @@ class User {
       gender,
       bio=null,
   ) {
-    this.password = password;
     this.email = email;
     this.phonenumber = phonenumber;
     this.first_name = firstName;
@@ -33,6 +33,9 @@ class User {
     this.height = height;
     this.gender = gender;
     this.bio = bio;
+    bcrypt.hash(password, 10).then((hash) => {
+      this.password = hash;
+    });
   }
   /**
    * To save the new user into database
@@ -59,7 +62,9 @@ class User {
       ]);
       return newUser;
     } catch (e) {
+      // TODO: log the error
       console.log(e);
+      return null;
     }
   }
   /**
@@ -90,6 +95,26 @@ class User {
         count: user.rowCount,
         rows: user.rows,
       };
+    } catch (e) {
+      // TODO: log the error
+      console.log(e);
+    }
+  }
+  /**
+   * check if a user crudentials already exists
+   * @param  {String} email
+   * @param  {String} phonenumber
+   */
+  static async exists(email, phonenumber) {
+    try {
+      const user = await DB.query(
+          'SELECT * FROM users WHERE email=$1 OR phonenumber=$2', [
+            email, // $1
+            phonenumber, // $2
+          ],
+      );
+      console.log('test inside');
+      return true ? user.rowCount > 0 : false;
     } catch (e) {
       // TODO: log the error
       console.log(e);
