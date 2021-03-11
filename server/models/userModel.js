@@ -7,6 +7,7 @@ class User {
   /**
    * The constructor for User Model
    * @constructor
+   * @param  {Integer} id user id
    * @param  {String} password user pasaword
    * @param  {String} email user email
    * @param  {String} phonenumber user phonenumber
@@ -17,6 +18,7 @@ class User {
    * @param  {String} bio user bio
    */
   constructor(
+      id=null,
       password,
       email,
       phonenumber,
@@ -26,6 +28,7 @@ class User {
       gender,
       bio=null,
   ) {
+    this.id = id;
     this.email = email;
     this.phonenumber = phonenumber;
     this.first_name = firstName;
@@ -33,7 +36,7 @@ class User {
     this.height = height;
     this.gender = gender;
     this.bio = bio;
-    this.password = password;
+    this._password = password;
   }
   /**
    * To save the new user into database
@@ -41,16 +44,16 @@ class User {
    */
   async save() {
     try {
-      const pass = await bcrypt.hash(this.password, 10);
+      const pass = await bcrypt.hash(this._password, 10);
       const newUser = await DB.query(`INSERT INTO users(
-        password,
-        email,
-        phonenumber,
-        first_name,
-        last_name,
-        gender,
-        height
-        ) VALUES ($1,$2,$3,$4,$5,$6,$7)  RETURNING *`, [
+          password,
+          email,
+          phonenumber,
+          first_name,
+          last_name,
+          gender,
+          height
+          ) VALUES ($1,$2,$3,$4,$5,$6,$7)  RETURNING *`, [
         pass, // $1
         this.email, // $2
         this.phonenumber, // $3
@@ -67,33 +70,55 @@ class User {
     }
   }
   /**
-   * @param  {int} id where conditions
+   * @param  {String} email
    */
-  static async findbyID(id) {
+  static async findOneByEmail(email) {
     try {
-      const user = DB.query('SELECT * FROM users WHERE ID=$1', [id]);
-      return {
-        count: user.rowCount,
-        rows: user.rows,
-      };
+      const query = await DB.query('SELECT * FROM users WHERE email=$1', [
+        email,
+      ]);
+      return new User(
+          query.rows[0].ID, // ID
+          query.rows[0].password, // Pass
+          query.rows[0].email, // email
+          query.rows[0].phonenumber, // phone number
+          query.rows[0].first_name, // first Name
+          query.rows[0].last_name, // last Name
+          query.rows[0].height, // height
+          query.rows[0].gender, // gender
+          query.rows[0].bio, // bio
+      );
     } catch (e) {
+      // TODO: log the error
       console.log(e);
     }
   }
   /**
-   * find user by email
-   * @param  {String} email
-   * @return {user} user
+   * updates the User Object Password
+   * @param  {String} newPass
    */
-  static async findbyEmail(email) {
+  async setPassword(newPass) {
+    const encryptedNewPass = await bcrypt.hash(newPass, 10);
+    this._password = encryptedNewPass;
+  }
+
+  /**
+   * @param  {int} id where conditions
+   */
+  static async findOnebyID(id) {
     try {
-      const user = await DB.query(
-          'SELECT * FROM users WHERE email=$1', [email],
+      const query = DB.query('SELECT * FROM users WHERE ID=$1', [id]);
+      return new User(
+          query.rows[0].ID, // ID
+          query.rows[0].password, // Pass
+          query.rows[0].email, // email
+          query.rows[0].phonenumber, // phone number
+          query.rows[0].first_name, // first Name
+          query.rows[0].last_name, // last Name
+          query.rows[0].height, // height
+          query.rows[0].gender, // gender
+          query.rows[0].bio, // bio
       );
-      return {
-        count: user.rowCount,
-        rows: user.rows,
-      };
     } catch (e) {
       // TODO: log the error
       console.log(e);
