@@ -39,37 +39,6 @@ class User {
     this._password = password;
   }
   /**
-   * To save the new user into database
-   * @return {newUser}
-   */
-  async save() {
-    try {
-      const pass = await bcrypt.hash(this._password, 10);
-      const newUser = await DB.query(`INSERT INTO users(
-          password,
-          email,
-          phonenumber,
-          first_name,
-          last_name,
-          gender,
-          height
-          ) VALUES ($1,$2,$3,$4,$5,$6,$7)  RETURNING *`, [
-        pass, // $1
-        this.email, // $2
-        this.phonenumber, // $3
-        this.first_name, // $4
-        this.last_name, // $5
-        this.gender, // $6
-        this.height, // $7
-      ]);
-      return newUser.rows[0];
-    } catch (e) {
-      // TODO: log the error
-      console.log(e);
-      return null;
-    }
-  }
-  /**
    * @param  {String} email
    */
   static async findOneByEmail(email) {
@@ -93,15 +62,6 @@ class User {
       console.log(e);
     }
   }
-  /**
-   * updates the User Object Password
-   * @param  {String} newPass
-   */
-  async setPassword(newPass) {
-    const encryptedNewPass = await bcrypt.hash(newPass, 10);
-    this._password = encryptedNewPass;
-  }
-
   /**
    * @param  {int} id where conditions
    */
@@ -142,6 +102,46 @@ class User {
       // TODO: log the error
       console.log(e);
     }
+  }
+
+  /**
+   * To save the new user into database
+   * @return {newUser}
+   */
+  async save() {
+    try {
+      const pass = await bcrypt.hash(this._password, 10);
+      const newUser = await DB.query(`INSERT INTO users(
+          password,
+          email,
+          phonenumber,
+          first_name,
+          last_name,
+          gender,
+          height
+          ) VALUES ($1,$2,$3,$4,$5,$6,$7)  RETURNING *`, [
+        pass, // $1
+        this.email, // $2
+        this.phonenumber, // $3
+        this.first_name, // $4
+        this.last_name, // $5
+        this.gender, // $6
+        this.height, // $7
+      ]);
+      return newUser.rows[0];
+    } catch (e) {
+      // TODO: log the error
+      console.log(e);
+      return null;
+    }
+  }
+  /**
+   * updates the User Object Password
+   * @param  {String} newPass
+   */
+  async setPassword(newPass) {
+    const encryptedNewPass = await bcrypt.hash(newPass, 10);
+    this._password = encryptedNewPass;
   }
 }
 
