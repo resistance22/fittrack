@@ -143,6 +143,38 @@ class User {
     const encryptedNewPass = await bcrypt.hash(newPass, 10);
     this._password = encryptedNewPass;
   }
-}
+  /**
+   * update the instantiated User
+   */
+  async update() {
+    try {
+      const query = await DB.query(`UPDATE  users SET
+          password=$1,
+          email=$2,
+          phonenumber=$3,
+          first_name=$4,
+          last_name=$5,
+          gender=$6,
+          height=$7,
+          bio=$8
+          WHERE ID=$9`, [
+        this._password, // $1
+        this.email, // $2
+        this.phonenumber, // $3
+        this.first_name, // $4
+        this.last_name, // $5
+        this.gender, // $6
+        this.height, // $7
+        this.bio, // $8
+        this.id, // $9
+      ]);
+      return query.rows[0];
+    } catch (e) {
+      // TODO: log the error
+      console.log(e);
+      return null;
+    }
+  }
+} // end of class
 
 module.exports = User;
