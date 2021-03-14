@@ -1,5 +1,6 @@
 const UserModel = require('../../models/userModel');
 
+
 module.exports = {
   /**
    * register api controller
@@ -33,17 +34,20 @@ module.exports = {
       });
     }
 
-    let newUser = new UserModel(
-        password,
-        email,
-        phonenumber,
-        firstName,
-        lastName,
-        height,
-        gender,
-    );
+    let newUser = new UserModel({
+      password,
+      email,
+      phonenumber,
+      firstName,
+      lastName,
+      height,
+      gender,
+    });
     newUser = await newUser.save();
-    console.log(newUser);
-    res.status(200).json(req.body);
+    if ( newUser ) {
+      res.status(200).json(req.body);
+    } else {
+      res.status(500).json({error: 'someting went wrong!'});
+    }
   },
 };

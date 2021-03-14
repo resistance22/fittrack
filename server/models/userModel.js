@@ -7,36 +7,18 @@ class User {
   /**
    * The constructor for User Model
    * @constructor
-   * @param  {Integer} id user id
-   * @param  {String} password user pasaword
-   * @param  {String} email user email
-   * @param  {String} phonenumber user phonenumber
-   * @param  {String} firstName user firstName
-   * @param  {String} lastName  user lastName
-   * @param  {String} height user height
-   * @param  {String} gender user gender
-   * @param  {String} bio user bio
+   * @param  {Object} userData Object containing user data
    */
-  constructor(
-      id=null,
-      password,
-      email,
-      phonenumber,
-      firstName=null,
-      lastName=null,
-      height,
-      gender,
-      bio=null,
-  ) {
-    this.id = id;
-    this.email = email;
-    this.phonenumber = phonenumber;
-    this.first_name = firstName;
-    this.last_name = lastName;
-    this.height = height;
-    this.gender = gender;
-    this.bio = bio;
-    this.password = password;
+  constructor(userData) {
+    this.id = userData.id;
+    this.email = userData.email;
+    this.phonenumber = userData.phonenumber;
+    this.first_name = userData.firstName;
+    this.last_name = userData.lastName;
+    this.height = userData.height;
+    this.gender = userData.gender;
+    this.bio = userData.bio;
+    this.password = userData.password;
   }
   /**
    * setter for password to hash the password before setting
