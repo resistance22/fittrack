@@ -36,8 +36,23 @@ class User {
     this.height = height;
     this.gender = gender;
     this.bio = bio;
-    this._password = password;
+    this.password = password;
   }
+  /**
+   * setter for password to hash the password before setting
+   * @param  {String} plainPassword
+   */
+  set password(plainPassword) {
+    const encryptedNewPass = bcrypt.hashSync(plainPassword, 10);
+    this._password = encryptedNewPass;
+  }
+  /**
+   * getter fo password attribute
+   */
+  get password() {
+    return this._password;
+  }
+
   /**
    * @param  {String} email
    */
@@ -110,7 +125,6 @@ class User {
    */
   async save() {
     try {
-      const pass = await bcrypt.hash(this._password, 10);
       const newUser = await DB.query(`INSERT INTO users(
           password,
           email,
@@ -120,7 +134,7 @@ class User {
           gender,
           height
           ) VALUES ($1,$2,$3,$4,$5,$6,$7)  RETURNING *`, [
-        pass, // $1
+        this.password, // $1
         this.email, // $2
         this.phonenumber, // $3
         this.first_name, // $4
@@ -134,14 +148,6 @@ class User {
       console.log(e);
       return null;
     }
-  }
-  /**
-   * updates the User Object Password
-   * @param  {String} newPass
-   */
-  async setPassword(newPass) {
-    const encryptedNewPass = await bcrypt.hash(newPass, 10);
-    this._password = encryptedNewPass;
   }
   /**
    * update the instantiated User
@@ -158,7 +164,7 @@ class User {
           height=$7,
           bio=$8
           WHERE ID=$9`, [
-        this._password, // $1
+        this.password, // $1
         this.email, // $2
         this.phonenumber, // $3
         this.first_name, // $4
