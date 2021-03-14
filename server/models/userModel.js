@@ -89,7 +89,7 @@ class User {
    * @param  {String} email
    * @param  {String} phonenumber
    */
-  static async exists(email, phonenumber) {
+  static async isEmailOrPhonenumberDuplicate(email, phonenumber) {
     try {
       const user = await DB.query(
           'SELECT * FROM users WHERE email=$1 OR phonenumber=$2', [

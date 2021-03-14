@@ -23,7 +23,10 @@ module.exports = {
         error: 'missing value',
       });
     }
-    const exists = await UserModel.exists(email, phonenumber);
+    const exists = await UserModel.isEmailOrPhonenumberDuplicate(
+        email,
+        phonenumber,
+    );
     if ( exists ) {
       return res.status(409).json({
         error: 'email or phonenumber already exists',
