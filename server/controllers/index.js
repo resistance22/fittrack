@@ -1,4 +1,5 @@
 const registerControllers = require('./api/registerController');
+const loginControllers = require('./api/loginController');
 module.exports = {
   // Home Route Controllers
   home: {
@@ -12,6 +13,9 @@ module.exports = {
   api: {
     register: {
       post: registerControllers.post,
+    },
+    login: {
+      post: loginControllers.post
     },
   },
 };
