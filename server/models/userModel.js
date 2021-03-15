@@ -10,7 +10,7 @@ class User {
    * @param  {Object} userData Object containing user data
    */
   constructor(userData) {
-    this.id = userData.id;
+    this.ID = userData.ID;
     this.email = userData.email;
     this.phonenumber = userData.phonenumber;
     this.first_name = userData.firstName;
@@ -18,7 +18,11 @@ class User {
     this.height = userData.height;
     this.gender = userData.gender;
     this.bio = userData.bio;
-    this.password = userData.password;
+    if ( userData.password ) {
+      this.password = userData.password;
+    } else {
+      this._password = null;
+    }
   }
   /**
    * setter for password to hash the password before setting
@@ -34,6 +38,13 @@ class User {
   get password() {
     return this._password;
   }
+  /**
+   * To set the _password directly,for internal use only
+   * @param  {String} PlainPassword
+   */
+  _setPassword(PlainPassword) {
+    this._password = PlainPassword;
+  }
 
   /**
    * @param  {String} email
@@ -43,46 +54,51 @@ class User {
       const query = await DB.query('SELECT * FROM users WHERE email=$1', [
         email,
       ]);
-      return new User(
-          query.rows[0].ID, // ID
-          query.rows[0].password, // Pass
-          query.rows[0].email, // email
-          query.rows[0].phonenumber, // phone number
-          query.rows[0].first_name, // first Name
-          query.rows[0].last_name, // last Name
-          query.rows[0].height, // height
-          query.rows[0].gender, // gender
-          query.rows[0].bio, // bio
-      );
+      const user = new User({
+        ID: query.rows[0].ID,
+        email: query.rows[0].email,
+        phonenumber: query.rows[0].phonenumber,
+        firstName: query.rows[0].first_name,
+        lastName: query.rows[0].last_name,
+        height: query.rows[0].height,
+        gender: query.rows[0].gender,
+        bio: query.rows[0].bio,
+      });
+      user._setPassword(query.rows[0].password);
     } catch (e) {
       // TODO: log the error
       console.log(e);
     }
   }
   /**
-   * @param  {int} id where conditions
+   * @param  {String} email
+   * @param  {String} phonenumber
    */
-  static async findOnebyID(id) {
+  static async findOneByEmailOrPhonenumber(email, phonenumber) {
     try {
-      const query = DB.query('SELECT * FROM users WHERE ID=$1', [id]);
-      return new User(
-          query.rows[0].ID, // ID
-          query.rows[0].password, // Pass
-          query.rows[0].email, // email
-          query.rows[0].phonenumber, // phone number
-          query.rows[0].first_name, // first Name
-          query.rows[0].last_name, // last Name
-          query.rows[0].height, // height
-          query.rows[0].gender, // gender
-          query.rows[0].bio, // bio
-      );
+      // eslint-disable-next-line max-len
+      const query = await DB.query('SELECT * FROM users WHERE email=$1 OR phonenumber=$2', [
+        email, // $1
+        phonenumber, // $2
+      ]);
+      const user = new User({
+        ID: query.rows[0].ID,
+        email: query.rows[0].email,
+        phonenumber: query.rows[0].phonenumber,
+        firstName: query.rows[0].first_name,
+        lastName: query.rows[0].last_name,
+        height: query.rows[0].height,
+        gender: query.rows[0].gender,
+        bio: query.rows[0].bio,
+      });
+      user._setPassword(query.rows[0].password);
+      return user;
     } catch (e) {
       // TODO: log the error
       console.log(e);
     }
   }
   /**
-   * check if a user crudentials already exists
    * @param  {String} email
    * @param  {String} phonenumber
    */
