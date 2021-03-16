@@ -11,14 +11,14 @@ class Size {
      * @param  {int} hips
      * @param  {int} chest
      */
-  constructor(userID, entryDate, waist, arm, hips, chest) {
-    this.user = userID;
-    this.entryDate = entryDate;
-    this.waist = waist;
-    this.arm = arm;
-    this.hips = hips;
-    this.chest = chest;
+  constructor (userID, entryDate, waist, arm, hips, chest) {
+    this.user = userID
+    this.entryDate = entryDate
+    this.waist = waist
+    this.arm = arm
+    this.hips = hips
+    this.chest = chest
   }
 }
 
-module.exports = Size;
+module.exports = Size

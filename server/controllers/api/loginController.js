@@ -1,6 +1,5 @@
-const UserModel = require('../../models/userModel');
-
-
+const UserModel = require('../../models/userModel')
+const jwt = require('jsonwebtoken')
 module.exports = {
   /**
    * register api controller
@@ -12,32 +11,35 @@ module.exports = {
     const {
       email,
       phonenumber,
-      password,
-    } = req.body;
+      password
+    } = req.body
     // check if necassary data is present
-    if ( !( (email || phonenumber) && password ) ) {
+    if (!((email || phonenumber) && password)) {
       return res.status(422).json({
-        error: 'missing value',
-      });
+        error: 'missing value'
+      })
     }
     const user = await UserModel.findOneByEmailOrPhonenumber(
-        email,
-        phonenumber,
-    );
-    if ( !user ) {
+      email,
+      phonenumber
+    )
+    if (!user) {
       return res.status(401).json({
-        error: 'wrong email or phone number',
-      });
+        error: 'wrong email or phone number'
+      })
     }
-    if ( !(await user.isUserPasswordCorrect(password)) ) {
+    if (!(await user.isUserPasswordCorrect(password))) {
       return res.status(401).json({
-        error: 'wrong password',
-      });
+        error: 'wrong password'
+      })
     }
-    return res.status(200).json({
+    const token = jwt.sign({
       id: user.ID,
       email: user.email,
-      phonenumber: user.phonenumber,
-    });
-  },
-};
+      phonenumber: user.phonenumber
+    }, process.env.JWT_SECRET)
+    return res.status(200).json({
+      token: token
+    })
+  }
+}

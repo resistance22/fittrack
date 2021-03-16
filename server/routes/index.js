@@ -1,9 +1,9 @@
-const express = require('express');
-const controllers = require('../controllers');
+const express = require('express')
+const controllers = require('../controllers')
 // eslint-disable-next-line new-cap
-const router = express.Router();
+const router = express.Router()
 
 module.exports = () => {
-  router.get('/', controllers.home.get);
-  return router;
-};
+  router.get('/', controllers.home.get)
+  return router
+}
