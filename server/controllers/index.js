@@ -1,5 +1,6 @@
 const registerControllers = require('./api/registerController')
 const loginControllers = require('./api/loginController')
+const weightControllers = require('./api/weightController')
 module.exports = {
   // Home Route Controllers
   home: {
@@ -16,6 +17,9 @@ module.exports = {
     },
     login: {
       post: loginControllers.post
+    },
+    weights: {
+      post: weightControllers.post
     }
   }
 }
