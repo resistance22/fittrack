@@ -43,10 +43,8 @@ module.exports = {
       gender
     })
     newUser = await newUser.save()
-    if (newUser) {
-      res.status(200).json(req.body)
-    } else {
-      res.status(500).json({ error: 'someting went wrong!' })
-    }
+    if (!newUser) res.status(500).json({ error: 'someting went wrong!' })
+
+    res.status(200).json(req.body)
   }
 }
