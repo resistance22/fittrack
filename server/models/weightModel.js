@@ -34,6 +34,18 @@ class Weight {
       return null
     }
   }
+
+  static async getAllByUser (userID) {
+    try {
+      const query = await DB.query(`SELECT (weght, entrydate) FROM weight
+        WHERE user_id=$1
+      `, userID)
+      return query.rows
+    } catch (e) {
+      // TODO: log the console.error(
+      return null
+    }
+  }
 }
 
 module.exports = Weight
