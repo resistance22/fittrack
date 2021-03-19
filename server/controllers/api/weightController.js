@@ -22,6 +22,7 @@ module.exports = {
   getAll: async (req, res) => {
     const userID = req.user.id
     const weights = await WeightModel.getAllByUser(userID)
+    if (!weights) res.sendStatus(500)
     res.status(200).json(weights)
   },
   put: async (req, res) => {
@@ -29,10 +30,8 @@ module.exports = {
     const newWeight = await WeightModel.getOneByID(weightID)
     newWeight.weight = weight
     newWeight.date = date
-    const result = await newWeight.update()
-    if (!result) {
-      return res.sendStatus(500)
-    }
+    const updateResult = await newWeight.update()
+    if (!updateResult) return res.sendStatus(500)
     return res.sendStatus(200)
   }
 }
