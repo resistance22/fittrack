@@ -23,5 +23,13 @@ module.exports = {
     const userID = req.user.id
     const weights = await WeightModel.getAllByUser(userID)
     res.status(200).json(weights)
+  },
+  put: async (req, res) => {
+    const { weightID, weight, date } = req.body
+    const newWeight = WeightModel.getOneByID(weightID)
+    newWeight.weight = weight
+    newWeight.date = date
+    newWeight.update()
+    res.sendStatus(200)
   }
 }
