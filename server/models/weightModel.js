@@ -37,12 +37,13 @@ class Weight {
 
   static async getAllByUser (userID) {
     try {
-      const query = await DB.query(`SELECT (weght, entrydate) FROM weight
+      const query = await DB.query(`SELECT * FROM weight
         WHERE user_id=$1
-      `, userID)
+      `, [userID])
       return query.rows
     } catch (e) {
-      // TODO: log the console.error(
+      // TODO: log the error
+      console.error(e)
       return null
     }
   }

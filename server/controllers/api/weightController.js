@@ -18,5 +18,10 @@ module.exports = {
     if (!savedWeight) return res.sendStatus(500)
 
     return res.status(200).json({ savedWeight })
+  },
+  getAll: async (req, res) => {
+    const userID = req.user.id
+    const weights = await WeightModel.getAllByUser(userID)
+    res.status(200).json(weights)
   }
 }

@@ -19,7 +19,8 @@ module.exports = {
       post: loginControllers.post
     },
     weights: {
-      post: weightControllers.post
+      post: weightControllers.post,
+      get: weightControllers.getAll
     }
   }
 }
