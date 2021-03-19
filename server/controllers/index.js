@@ -20,7 +20,8 @@ module.exports = {
     },
     weights: {
       post: weightControllers.post,
-      get: weightControllers.getAll
+      get: weightControllers.getAll,
+      put: weightControllers.put
     }
   }
 }

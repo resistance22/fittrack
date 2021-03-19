@@ -37,10 +37,10 @@ class Weight {
 
   async update () {
     try {
-      const query = await DB.query(`UPDATE  weight SET
-          weight=$1,
-          entrydate=$2,
-          WHERE ID=$3`, [
+      const query = await DB.query(`UPDATE weight SET
+          weight = $1,
+          entrydate = $2
+          WHERE "ID"=$3 RETURNING *`, [
         this.weight, // $1
         this.entryDate, // $2
         this.ID // $3
@@ -48,7 +48,7 @@ class Weight {
       return query.rows[0]
     } catch (e) {
       // TODO: log the error
-      console.log(e)
+      console.error(e)
       return null
     }
   }
@@ -56,7 +56,7 @@ class Weight {
   static async getOneByID (weightID) {
     try {
       const query = await DB.query(`SELECT * FROM weight
-        WHERE ID=$1
+        WHERE "ID"=$1
       `, [weightID])
       return new Weight({
         ID: query.rows[0].ID,

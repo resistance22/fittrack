@@ -173,7 +173,7 @@ class User {
    */
   async update () {
     try {
-      const query = await DB.query(`UPDATE  users SET
+      const query = await DB.query(`UPDATE users SET
           password=$1,
           email=$2,
           phonenumber=$3,
