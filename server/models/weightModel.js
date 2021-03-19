@@ -35,6 +35,42 @@ class Weight {
     }
   }
 
+  async update () {
+    try {
+      const query = await DB.query(`UPDATE  weight SET
+          weight=$1,
+          entrydate=$2,
+          WHERE ID=$3`, [
+        this.weight, // $1
+        this.entryDate, // $2
+        this.ID // $3
+      ])
+      return query.rows[0]
+    } catch (e) {
+      // TODO: log the error
+      console.log(e)
+      return null
+    }
+  }
+
+  static async getOneByID (weightID) {
+    try {
+      const query = await DB.query(`SELECT * FROM weight
+        WHERE ID=$1
+      `, [weightID])
+      return new Weight({
+        ID: query.rows[0].ID,
+        userID: query.rows[0].user_id,
+        entryDate: query.rows[0].entrydate,
+        weight: query.rows[0].weight
+      })
+    } catch (e) {
+      // TODO: log the error
+      console.error(e)
+      return null
+    }
+  }
+
   static async getAllByUser (userID) {
     try {
       const query = await DB.query(`SELECT * FROM weight
