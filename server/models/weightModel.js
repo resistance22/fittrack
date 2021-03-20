@@ -58,6 +58,7 @@ class Weight {
       const query = await DB.query(`SELECT * FROM weight
         WHERE "ID"=$1
       `, [weightID])
+      if (query.rowCount === 0) return null
       return new Weight({
         ID: query.rows[0].ID,
         userID: query.rows[0].user_id,
