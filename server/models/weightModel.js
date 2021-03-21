@@ -84,6 +84,19 @@ class Weight {
       return null
     }
   }
+
+  static async deleteByID (weightID) {
+    try {
+      const query = await DB.query('SELECT * FROM weight WHERE id=$1 RETURNING *', [
+        weightID
+      ])
+      if (query.rowCount === 0) return null
+      return query.rows[0]
+    } catch (error) {
+      console.error(error)
+      return null
+    }
+  }
 }
 
 module.exports = Weight
