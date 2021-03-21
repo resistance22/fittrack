@@ -18,20 +18,10 @@ module.exports = {
       password
     } = req.body
     // check if necassary data is present
-    if (!(email && phonenumber && height && gender && password)) {
-      return res.status(422).json({
-        error: 'missing value'
-      })
-    }
-    const exists = await UserModel.isEmailOrPhonenumberDuplicate(
-      email,
-      phonenumber
-    )
-    if (exists) {
-      return res.status(409).json({
-        error: 'email or phonenumber already exists'
-      })
-    }
+    if (!(email && phonenumber && height && gender && password)) return res.status(422).json({ error: 'missing value' })
+
+    const userExists = await UserModel.isEmailOrPhonenumberDuplicate(email, phonenumber)
+    if (userExists) return res.status(409).json({ error: 'email or phonenumber already exists' })
 
     let newUser = new UserModel({
       password,
