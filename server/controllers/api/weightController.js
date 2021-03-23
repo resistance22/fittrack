@@ -37,7 +37,7 @@ module.exports = {
   },
   delete: async (req, res) => {
     const userID = req.user.id
-    const { weightID } = req.body
+    const { weightID } = req.params
     const deleted = WeightModel.deleteByID(weightID, userID)
     if (deleted === 0) return res.sendStatus(404)
     if (deleted === null) return res.sendStatus(500)
