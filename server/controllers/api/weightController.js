@@ -34,5 +34,13 @@ module.exports = {
     const updateResult = await newWeight.update()
     if (!updateResult) return res.sendStatus(500)
     return res.sendStatus(200)
+  },
+  delete: async (req, res) => {
+    const userID = req.user.id
+    const { weightID } = req.body
+    const deleted = WeightModel.deleteByID(weightID, userID)
+    if (deleted === 0) return res.sendStatus(404)
+    if (deleted === null) return res.sendStatus(500)
+    return res.json(deleted)
   }
 }

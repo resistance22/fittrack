@@ -11,5 +11,6 @@ module.exports = () => {
   router.post('/weights', authenticateUser, controllers.api.weights.post)
   router.get('/weights', authenticateUser, controllers.api.weights.get)
   router.put('/weights', authenticateUser, controllers.api.weights.put)
+  router.delete('/weights', authenticateUser, controllers.api.weights.delete)
   return router
 }
