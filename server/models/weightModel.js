@@ -87,7 +87,7 @@ class Weight {
 
   static async deleteByID (weightID, userID) {
     try {
-      const query = await DB.query('DELETE FROM weight WHERE id=$1 AND user_id=$2 RETURNING *', [
+      const query = await DB.query('DELETE FROM weight WHERE "ID"=$1 AND "user_id"=$2 RETURNING *', [
         weightID, // $1
         userID // $2
       ])
