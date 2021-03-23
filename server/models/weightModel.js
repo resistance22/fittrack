@@ -85,12 +85,13 @@ class Weight {
     }
   }
 
-  static async deleteByID (weightID) {
+  static async deleteByID (weightID, userID) {
     try {
-      const query = await DB.query('SELECT * FROM weight WHERE id=$1 RETURNING *', [
-        weightID
+      const query = await DB.query('DELETE FROM weight WHERE id=$1 AND user_id=$2 RETURNING *', [
+        weightID, // $1
+        userID // $2
       ])
-      if (query.rowCount === 0) return null
+      if (query.rowCount === 0) return 0
       return query.rows[0]
     } catch (error) {
       console.error(error)
