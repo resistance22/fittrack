@@ -1,5 +1,5 @@
 const DB = require('../db')
-const { DatabaseError } = require('../errors');
+const { DatabaseError } = require('../errors')
 /**
  * Weight Model
  */
@@ -31,8 +31,7 @@ class Weight {
       return newUser.rows[0]
     } catch (e) {
       // TODO: log the error
-      console.log(e)
-      return null
+      throw DatabaseError(e.message)
     }
   }
 
@@ -49,8 +48,7 @@ class Weight {
       return query.rows[0]
     } catch (e) {
       // TODO: log the error
-      console.error(e)
-      return null
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -68,8 +66,7 @@ class Weight {
       })
     } catch (e) {
       // TODO: log the error
-      console.error(e)
-      return null
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -93,9 +90,8 @@ class Weight {
       ])
       if (query.rowCount === 0) return 0
       return query.rows[0]
-    } catch (error) {
-      console.error(error)
-      return null
+    } catch (e) {
+      throw new DatabaseError(e.message)
     }
   }
 }
