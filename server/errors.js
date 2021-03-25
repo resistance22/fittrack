@@ -5,6 +5,14 @@ class DatabaseError extends Error {
   }
 }
 
+class HTTPError extends Error {
+  constructor (message, status) {
+    super(message)
+    this.name = 'HTTPErro'
+    this.status = status
+  }
+}
+
 module.exports = {
   DatabaseError: DatabaseError
 }
