@@ -1,6 +1,7 @@
 const WeightModel = require('../../models/weightModel')
 const {
-  DatabaseError
+  DatabaseError,
+  HTTPError
 } = require('../../errors')
 module.exports = {
   post: async (req, res) => {
@@ -16,10 +17,14 @@ module.exports = {
       weight: weight,
       entryDate: entryDate
     })
-    const savedWeight = await newWeight.save()
-    if (!savedWeight) return res.sendStatus(500)
-
-    return res.status(200).json({ savedWeight })
+    try {
+      const savedWeight = await newWeight.save()
+      return res.status(200).json({ savedWeight })
+    } catch (e) {
+      if (e instanceof DatabaseError) {
+        res.sendStatus(500)
+      }
+    }
   },
   getAll: async (req, res) => {
     const userID = req.user.id
@@ -34,20 +39,43 @@ module.exports = {
   },
   put: async (req, res) => {
     const { weightID, weight, date } = req.body
-    const newWeight = await WeightModel.getOneByID(weightID)
-    if (!newWeight) return res.sendStatus(404)
-    newWeight.weight = weight
-    newWeight.date = date
-    const updateResult = await newWeight.update()
-    if (!updateResult) return res.sendStatus(500)
-    return res.sendStatus(200)
+    try {
+      const newWeight = await WeightModel.getOneByID(weightID)
+      newWeight.weight = weight
+      newWeight.date = date
+      try {
+        await newWeight.update()
+        return res.sendStatus(200)
+      } catch (e) {
+        if (e instanceof DatabaseError) {
+          res.sendStatus(500)
+        }
+        if (e instanceof HTTPError) {
+          res.sendStatus(e.status)
+        }
+      }
+    } catch (e) {
+      if (e instanceof DatabaseError) {
+        res.sendStatus(500)
+      }
+      if (e instanceof HTTPError) {
+        res.sendStatus(e.status)
+      }
+    }
   },
   delete: async (req, res) => {
     const userID = req.user.id
     const { weightID } = req.params
-    const deleted = await WeightModel.deleteByID(weightID, userID)
-    if (deleted === 0) return res.sendStatus(404)
-    if (deleted === null) return res.sendStatus(500)
-    return res.json(deleted)
+    try {
+      const deleted = await WeightModel.deleteByID(weightID, userID)
+      return res.statud(200).json(deleted)
+    } catch (e) {
+      if (e instanceof DatabaseError) {
+        res.sendStatus(500)
+      }
+      if (e instanceof HTTPError) {
+        res.sendStatus(e.status)
+      }
+    }
   }
 }
