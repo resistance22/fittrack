@@ -1,5 +1,6 @@
 const DB = require('../db')
 const bcrypt = require('bcrypt')
+const { DatabaseError, HTTPError } = require('../errors')
 /**
  * User Model
  */
@@ -57,23 +58,24 @@ class User {
       const query = await DB.query('SELECT * FROM users WHERE email=$1', [
         email
       ])
-      if (query.rowCount > 0) {
-        const user = new User({
-          ID: query.rows[0].ID,
-          email: query.rows[0].email,
-          phonenumber: query.rows[0].phonenumber,
-          firstName: query.rows[0].first_name,
-          lastName: query.rows[0].last_name,
-          height: query.rows[0].height,
-          gender: query.rows[0].gender,
-          bio: query.rows[0].bio
-        })
-        user._setPassword(query.rows[0].password)
-        return user
+      if (query.rowCount === 0) {
+        throw new HTTPError('Not Found!', 404)
       }
+      const user = new User({
+        ID: query.rows[0].ID,
+        email: query.rows[0].email,
+        phonenumber: query.rows[0].phonenumber,
+        firstName: query.rows[0].first_name,
+        lastName: query.rows[0].last_name,
+        height: query.rows[0].height,
+        gender: query.rows[0].gender,
+        bio: query.rows[0].bio
+      })
+      user._setPassword(query.rows[0].password)
+      return user
     } catch (e) {
       // TODO: log the error
-      console.log(e)
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -105,7 +107,7 @@ class User {
       return null
     } catch (e) {
       // TODO: log the error
-      console.log(e)
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -124,7 +126,7 @@ class User {
       return user.rowCount > 0
     } catch (e) {
       // TODO: log the error
-      console.log(e)
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -133,8 +135,7 @@ class User {
    * @param  {String} plainPassword
    */
   async isUserPasswordCorrect (plainPassword) {
-    const isCorrect = await bcrypt.compare(plainPassword, this._password)
-    return isCorrect
+    return await bcrypt.compare(plainPassword, this._password)
   }
 
   /**
@@ -163,8 +164,7 @@ class User {
       return newUser.rows[0]
     } catch (e) {
       // TODO: log the error
-      console.log(e)
-      return null
+      throw new DatabaseError(e.message)
     }
   }
 
@@ -196,8 +196,7 @@ class User {
       return query.rows[0]
     } catch (e) {
       // TODO: log the error
-      console.log(e)
-      return null
+      throw new DatabaseError(e.message)
     }
   }
 } // end of class
