@@ -1,5 +1,7 @@
 const WeightModel = require('../../models/weightModel')
-
+const {
+  DatabaseError
+} = require('../../errors')
 module.exports = {
   post: async (req, res) => {
     const userID = req.user.id
@@ -21,9 +23,14 @@ module.exports = {
   },
   getAll: async (req, res) => {
     const userID = req.user.id
-    const weights = await WeightModel.getAllByUser(userID)
-    if (!weights) res.sendStatus(500)
-    res.status(200).json(weights)
+    try {
+      const weights = await WeightModel.getAllByUser(userID)
+      res.status(200).json(weights)
+    } catch (e) {
+      if (e instanceof DatabaseError) {
+        res.sendStatus(500)
+      }
+    }
   },
   put: async (req, res) => {
     const { weightID, weight, date } = req.body

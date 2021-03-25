@@ -1,4 +1,5 @@
 const DB = require('../db')
+const { DatabaseError } = require('../errors');
 /**
  * Weight Model
  */
@@ -74,14 +75,13 @@ class Weight {
 
   static async getAllByUser (userID) {
     try {
-      const query = await DB.query(`SELECT * FROM weight
+      const query = await DB.query(`SELECT * FROM weights
         WHERE user_id=$1
       `, [userID])
       return query.rows
     } catch (e) {
       // TODO: log the error
-      console.error(e)
-      return null
+      throw new DatabaseError(e.message)
     }
   }
 
