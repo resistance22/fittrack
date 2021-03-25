@@ -1,5 +1,8 @@
 const DB = require('../db')
-const { DatabaseError } = require('../errors')
+const {
+  DatabaseError,
+  HTTPError
+} = require('../errors')
 /**
  * Weight Model
  */
@@ -57,7 +60,9 @@ class Weight {
       const query = await DB.query(`SELECT * FROM weight
         WHERE "ID"=$1
       `, [weightID])
-      if (query.rowCount === 0) return null
+      if (query.rowCount === 0) {
+        throw new HTTPError('No weight was found with this id', 404)
+      }
       return new Weight({
         ID: query.rows[0].ID,
         userID: query.rows[0].user_id,
@@ -88,7 +93,9 @@ class Weight {
         weightID, // $1
         userID // $2
       ])
-      if (query.rowCount === 0) return 0
+      if (query.rowCount === 0) {
+        throw new HTTPError('No weight was found with this id', 404)
+      }
       return query.rows[0]
     } catch (e) {
       throw new DatabaseError(e.message)
