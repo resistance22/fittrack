@@ -7,12 +7,6 @@ const {
  * Weight Model
  */
 class Weight {
-  /**
-     * @constructor
-     * @param  {int} userID
-     * @param  {Date} entryDate
-     * @param  {float} weight
-     */
   constructor ({ ID, userID, entryDate, weight }) {
     this.ID = ID
     this.userID = userID
@@ -34,7 +28,7 @@ class Weight {
       return newUser.rows[0]
     } catch (e) {
       // TODO: log the error
-      throw DatabaseError(e.message)
+      throw new DatabaseError(e.message)
     }
   }
 

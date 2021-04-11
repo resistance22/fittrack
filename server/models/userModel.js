@@ -5,11 +5,6 @@ const { DatabaseError, HTTPError } = require('../errors')
  * User Model
  */
 class User {
-  /**
-   * The constructor for User Model
-   * @constructor
-   * @param  {Object} userData Object containing user data
-   */
   constructor (userData) {
     this.ID = userData.ID
     this.email = userData.email
@@ -26,26 +21,15 @@ class User {
     }
   }
 
-  /**
-   * setter for password to hash the password before setting
-   * @param  {String} plainPassword
-   */
   set password (plainPassword) {
     const encryptedNewPass = bcrypt.hashSync(plainPassword, 10)
     this._password = encryptedNewPass
   }
 
-  /**
-   * getter fo password attribute
-   */
   get password () {
     return this._password
   }
 
-  /**
-   * To set the _password directly,for internal use only
-   * @param  {String} PlainPassword
-   */
   _setPassword (PlainPassword) {
     this._password = PlainPassword
   }
@@ -79,10 +63,6 @@ class User {
     }
   }
 
-  /**
-   * @param  {String} email
-   * @param  {String} phonenumber
-   */
   static async findOneByEmailOrPhonenumber (email, phonenumber) {
     try {
       // eslint-disable-next-line max-len
@@ -111,10 +91,6 @@ class User {
     }
   }
 
-  /**
-   * @param  {String} email
-   * @param  {String} phonenumber
-   */
   static async isEmailOrPhonenumberDuplicate (email, phonenumber) {
     try {
       const user = await DB.query(
@@ -130,18 +106,10 @@ class User {
     }
   }
 
-  /**
-   * checks if the user password is correct
-   * @param  {String} plainPassword
-   */
   async isUserPasswordCorrect (plainPassword) {
     return await bcrypt.compare(plainPassword, this._password)
   }
 
-  /**
-   * To save the new user into database
-   * @return {newUser}
-   */
   async save () {
     try {
       const newUser = await DB.query(`INSERT INTO users(
@@ -168,9 +136,6 @@ class User {
     }
   }
 
-  /**
-   * update the instantiated User
-   */
   async update () {
     try {
       const query = await DB.query(`UPDATE users SET

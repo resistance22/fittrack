@@ -5,7 +5,6 @@ const authenticateUser = require('../auth')
 const router = express.Router()
 
 module.exports = () => {
-  // register api endpoint
   router.post('/register', controllers.api.register.post)
   router.post('/login', controllers.api.login.post)
   router.post('/weights', authenticateUser, controllers.api.weights.post)

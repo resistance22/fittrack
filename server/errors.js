@@ -14,5 +14,6 @@ class HTTPError extends Error {
 }
 
 module.exports = {
-  DatabaseError: DatabaseError
+  DatabaseError: DatabaseError,
+  HTTPError: HTTPError
 }
